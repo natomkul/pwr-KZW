@@ -36,3 +36,13 @@ void Opener::print()
         printf("\n");
     }
 }
+
+int Opener::get_len()
+{
+    return len;
+}
+
+std::vector<std::vector<int>> Opener::get_data()
+{
+    return data;
+}
