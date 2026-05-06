@@ -1,2 +1,3 @@
-start.sh
-a.out
+*.sh
+*.out
+app
