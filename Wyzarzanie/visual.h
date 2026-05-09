@@ -1,11 +1,14 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "opener.h"
+#include "anealling.h"
 
 void wind()
 {
-    Data* proc = new Data("data.txt");
+    Data* proc = new Data("data-48.txt");
+
+    Anealling* prob = new Anealling(proc->get_nodes(), 100000);
+    auto dlh = prob->try_new();
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "Nodes");
 
@@ -25,7 +28,7 @@ void wind()
 
     window.setView(view);
 
-    std::vector<Node> nodes = proc->get_nodes();
+    auto nodes = proc->get_nodes();
 
     while (window.isOpen())
     {
@@ -38,26 +41,39 @@ void wind()
 
         window.clear();
 
-        for (auto& n : nodes)
+        for (int i = 0; i < nodes_size; i++)
         {
             sf::CircleShape dot(4.f);
-            dot.setPosition(n.X, n.Y);
+            dot.setPosition(nodes[i]->X, nodes[i]->Y);
             dot.setFillColor(sf::Color::Yellow);
 
-            if (n.next == nullptr)
-                continue;
-
-            sf::Vertex line[] =
+            if ( i == (nodes_size - 1))
             {
-                sf::Vertex(sf::Vector2f(n.X, n.Y), sf::Color::Yellow),
-                sf::Vertex(sf::Vector2f(n.next->X, n.next->Y), sf::Color::Yellow)
-            };
+                sf::Vertex line[] =
+                {
+                    sf::Vertex(sf::Vector2f(nodes[0]->X, nodes[0]->Y), sf::Color::Yellow),
+                    sf::Vertex(sf::Vector2f(nodes[nodes_size - 1]->X, nodes[nodes_size - 1]->Y), sf::Color::Yellow)
+                };
+                
+                window.draw(line, 2, sf::Lines);
+                window.draw(dot);
+            
+            } else {
 
-            window.draw(line, 2, sf::Lines);
-            window.draw(dot);
+                sf::Vertex line[] =
+                {
+                    sf::Vertex(sf::Vector2f(nodes[i]->X, nodes[i]->Y), sf::Color::Yellow),
+                    sf::Vertex(sf::Vector2f(nodes[i + 1]->X, nodes[i + 1]->Y), sf::Color::Yellow)
+                };
+                
+                window.draw(line, 2, sf::Lines);
+                window.draw(dot);
+            }
         }
 
         window.display();
+        
+        nodes = prob->try_new();
     }
 
     delete proc;

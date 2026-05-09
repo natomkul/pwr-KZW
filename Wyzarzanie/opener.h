@@ -2,21 +2,22 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include <memory>
+
+#define nodes_size 48
 
 struct Node
 {
  public:
     int id;
     int X, Y;
-    Node* prev;
-    Node* next;
 };
 
 class Data
 {
  private:
-    int nodes_size = 100;
-    std::vector<Node> nodes;
+    std::vector<std::shared_ptr<Node>> nodes;
 
     int min_x = 0;
     int min_y = 0;
@@ -34,5 +35,5 @@ class Data
     int get_minY();
     int get_maxY();
 
-    std::vector<Node> get_nodes();
+    std::vector<std::shared_ptr<Node>> get_nodes();
 };

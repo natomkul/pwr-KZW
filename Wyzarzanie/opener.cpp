@@ -11,7 +11,7 @@ Data::Data(const char* file)
 
     for (int i = 0; i < nodes_size; i++) 
     {
-        Node temp;
+        Node temp{};
         fscanf(fp, "%d %d %d", &temp.id, &temp.X, &temp.Y);
     
         min_x = std::min(temp.X, min_x);
@@ -20,25 +20,7 @@ Data::Data(const char* file)
         max_x = std::max(temp.X, max_x);
         max_y = std::max(temp.Y, max_y);
 
-        nodes.push_back(temp);
-    }
-
-    for (int i = 0; i < nodes_size; i++) 
-    {
- 
-        if (i > 0)
-        {
-            nodes[i].prev = &nodes[i - 1];
-        } else {
-            nodes[i].prev = &nodes[nodes_size - 1];
-        }
-
-        if (i < nodes_size - 1)
-        {
-            nodes[i].next = &nodes[i + 1];
-        } else {
-            nodes[i].next = &nodes[0];
-        }
+        nodes.emplace_back(std::make_shared<Node>(temp));
     }
 
     fclose(fp);
@@ -49,10 +31,9 @@ void Data::printData()
     for (int i = 0; i < nodes_size; i++) 
     {
         printf("indx: %d  ", i);
-        printf("id: %d  ", nodes[i].id);
-        printf("X: %d  ", nodes[i].X);
-        printf("Y: %d\n", nodes[i].Y);
-        printf("prev: %d   next: %d\n", nodes[i].prev->id, nodes[i].next->id);
+        printf("id: %d  ", nodes[i]->id);
+        printf("X: %d  ", nodes[i]->X);
+        printf("Y: %d\n", nodes[i]->Y);
     }
 }
 
@@ -76,7 +57,7 @@ int Data::get_maxY()
     return max_y;
 }
 
-std::vector<Node> Data::get_nodes()
+std::vector<std::shared_ptr<Node>> Data::get_nodes()
 {
     return nodes;
 }
